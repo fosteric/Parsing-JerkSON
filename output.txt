@@ -1,23 +1,7 @@
-name:    Milk 		 seen: 6 times
-============= 	 	 =============
-Price: 	 3.23		 seen: 5 times
--------------		 -------------
-Price:   1.23		 seen: 1 time
-
-name:   Bread		 seen: 6 times
-=============		 =============
-Price:   1.23		 seen: 6 times
--------------		 -------------
-
-name: Cookies     	 seen: 8 times
-=============     	 =============
-Price:   2.25        seen: 8 times
--------------        -------------
-
-name:  Apples     	 seen: 4 times
-=============     	 =============
-Price:   0.25     	 seen: 2 times
--------------     	 -------------
-Price:   0.23  	 	 seen: 2 times
-
-Errors         	 	 seen: 4 times
+apples at 0.23 per unit, seen: 1
+apples at 0.25 per unit, seen: 1
+bread at 1.23 per unit, seen: 3
+cookies at 2.25 per unit, seen: 4
+milk at 1.23 per unit, seen: 1
+milk at 3.23 per unit, seen: 3
+Errors seen: 2

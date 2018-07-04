@@ -1,15 +1,20 @@
 package io.zipcoder;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ItemParser {
 
     private int error = 0;
+
+    public int getError() {
+        return error;
+    }
 
     public Item parseStringIntoItem(String rawItem) throws ItemParseException{
         String lowerCaseString = toLowercase(rawItem);
@@ -21,7 +26,8 @@ public class ItemParser {
         for (int i = 0; i <groceryItemKeyValues.size(); i++){
             ArrayList<String> keyAndValue = findKeyAndValueInRawItemData(groceryItemKeyValues.get(i));
             if (keyAndValue.size()<2){
-                error++;
+                this.error++;
+                System.out.println("Why lawd:io.zipcoder.ItemParseException");
                 throw new ItemParseException();
             }
                 switch (i) {
@@ -72,10 +78,6 @@ public class ItemParser {
         return foodMatch.replaceAll("food");
     }
 
-    public int getCount(){
-        return 0;
-    }
-
     public ArrayList<String> findKeyAndValueInRawItemData(String rawItem){
         String stringPattern = ":";
         ArrayList<String> keyAndValueList = splitStringWithRegexPattern(stringPattern , rawItem);
@@ -86,9 +88,49 @@ public class ItemParser {
         return new ArrayList<String>(Arrays.asList(inputString.split(stringPattern)));
     }
 
-    public String formatList(ArrayList<Item> items){
+    public String formatItemListToString(ArrayList<Item> itemList){
+        Map<String, Integer> itemAtPriceCountMap = new TreeMap<String, Integer>();
+        for (Item i : itemList){
+            String itemKey = i.getName() + " at " + i.getPrice() +  " per unit";
+            Integer seen = itemAtPriceCountMap.containsKey(itemKey) ? itemAtPriceCountMap.get(itemKey) : 0;
+            itemAtPriceCountMap.put(itemKey, seen + 1);
+        }
+        String itemsStringOutput = formatItemMapToString(itemAtPriceCountMap);
+        return itemsStringOutput;
+    }
 
-        return null;
+    public String formatItemMapToString(Map<String, Integer> itemAtPriceCountMap){
+        Iterator itemMapIterator = itemAtPriceCountMap.entrySet().iterator();
+        String formattedItemString = "";
+        while (itemMapIterator.hasNext()){
+            Map.Entry pair = (Map.Entry)itemMapIterator.next();
+            formattedItemString += pair.getKey() + ", seen: " + pair.getValue() + "\n";
+        }
+        formattedItemString += "Errors seen: " + getError();
+        return formattedItemString;
+    }
+
+    public void printOutput(String itemStringOutput) throws FileNotFoundException {
+        PrintStream o = new PrintStream(new File("output.txt"));
+        PrintStream console = System.out;
+        System.setOut(o);
+        System.out.println(itemStringOutput);
+        System.setOut(console);
+        System.out.println(itemStringOutput);
+    }
+
+    public ArrayList<Item> parseItemStringToItemObject(ArrayList<String> groceryItemStringsAsList) {
+        ArrayList<Item> itemList = new ArrayList<Item>();
+        Iterator<String> itemIterator = groceryItemStringsAsList.iterator();
+        try {
+            while (itemIterator.hasNext()) {
+                itemList.add(parseStringIntoItem(itemIterator.next()));
+            }
+        } catch (Exception e) {
+            error++;
+            System.out.println("Why lawd:" + e);
+        }
+        return itemList;
     }
 
 

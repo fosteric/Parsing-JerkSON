@@ -20,18 +20,8 @@ public class Main {
         // TODO: parse the data in output into items, and display to console.
         ItemParser ip = new ItemParser();
         ArrayList<String> groceryItemStringsAsList = ip.parseRawDataIntoStringArray(input);
-        ArrayList<Item> itemList = new ArrayList<Item>();
-        Iterator<String> itemIterator = groceryItemStringsAsList.iterator();
-        try {
-            while (itemIterator.hasNext()) {
-                itemList.add(ip.parseStringIntoItem(itemIterator.next()));
-            }
-        }catch (Exception e){
-            System.out.println("Why lawd:" + e);
-        }
-        for (Item i:itemList) {
-            System.out.println(i.getName() + " " + i.getPrice());
-        }
-
+        ArrayList<Item> itemList = ip.parseItemStringToItemObject(groceryItemStringsAsList);
+        String itemsStringOutput = ip.formatItemListToString(itemList);
+        ip.printOutput(itemsStringOutput);
     }
 }
